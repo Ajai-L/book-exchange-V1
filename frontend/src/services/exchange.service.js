@@ -1,21 +1,34 @@
 import api from './api'
 
-export function requestExchange(bookId) {
-  return api.post('/exchanges', { bookId }).then(r => r.data)
+export function getExchanges(status = null) {
+  const params = status ? { status } : {}
+  return api.get('/exchanges', { params }).then(r => r.data)
 }
 
-export function getMyExchanges() {
-  return api.get('/exchanges/my').then(r => r.data)
+export function getExchange(id) {
+  return api.get(`/exchanges/${id}`).then(r => r.data)
+}
+
+export function createExchange(data) {
+  return api.post('/exchanges', data).then(r => r.data)
+}
+
+export function updateExchange(id, status) {
+  return api.put(`/exchanges/${id}`, { status }).then(r => r.data)
+}
+
+export function deleteExchange(id) {
+  return api.delete(`/exchanges/${id}`).then(r => r.data)
 }
 
 export function acceptExchange(id) {
-  return api.post(`/exchanges/${id}/accept`).then(r => r.data)
+  return updateExchange(id, 'ACCEPTED')
 }
 
 export function rejectExchange(id) {
-  return api.post(`/exchanges/${id}/reject`).then(r => r.data)
+  return updateExchange(id, 'REJECTED')
 }
 
 export function completeExchange(id) {
-  return api.post(`/exchanges/${id}/complete`).then(r => r.data)
+  return updateExchange(id, 'COMPLETED')
 }

@@ -10,7 +10,7 @@ export default function AddBook() {
     title: '',
     author: '',
     isbn: '',
-    condition: 'good',
+    condition: 'Good',
     description: ''
   })
   const [error, setError] = useState('')
@@ -40,7 +40,9 @@ export default function AddBook() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="bg-white p-6 rounded shadow-sm">
-        <h1 className="text-2xl font-bold mb-6">List a Book</h1>
+        <h1 className="text-3xl font-bold mb-2">List a Book</h1>
+        <p className="text-slate-600 mb-6">Share your books with the community</p>
+        
         {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -49,6 +51,7 @@ export default function AddBook() {
             required
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
+            placeholder="e.g., The Great Gatsby"
           />
 
           <Input
@@ -56,36 +59,38 @@ export default function AddBook() {
             required
             value={form.author}
             onChange={(e) => setForm({ ...form, author: e.target.value })}
+            placeholder="e.g., F. Scott Fitzgerald"
           />
 
           <Input
             label="ISBN (Optional)"
             value={form.isbn}
             onChange={(e) => setForm({ ...form, isbn: e.target.value })}
+            placeholder="e.g., 9780743273565"
           />
 
           <div>
-            <label className="text-sm block mb-1">Condition</label>
+            <label className="text-sm font-semibold block mb-2">Condition</label>
             <select
               value={form.condition}
               onChange={(e) => setForm({ ...form, condition: e.target.value })}
               className="border border-slate-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="like-new">Like New</option>
-              <option value="good">Good</option>
-              <option value="fair">Fair</option>
-              <option value="poor">Poor</option>
+              <option value="Like New">Like New</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Poor">Poor</option>
             </select>
           </div>
 
           <div>
-            <label className="text-sm block mb-1">Description (Optional)</label>
+            <label className="text-sm font-semibold block mb-2">Description (Optional)</label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               className="border border-slate-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="4"
-              placeholder="Add any additional details about the book..."
+              placeholder="Add any additional details about the book, notes, or reasons for exchange..."
             />
           </div>
 

@@ -5,7 +5,7 @@ import Button from '../../components/common/Button'
 import Input from '../../components/common/Input'
 
 export default function Register() {
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', campus: '', city: '', role: 'USER' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', city: '' })
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const { register } = useAuth()
@@ -14,8 +14,12 @@ export default function Register() {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
-    if (!form.firstName || !form.lastName || !form.email || !form.password) {
+    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
       setError('Please fill in all required fields')
+      return
+    }
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match')
       return
     }
     setSubmitting(true)
@@ -23,7 +27,14 @@ export default function Register() {
       await register(form)
       navigate('/books')
     } catch (err) {
-      setError(err?.response?.data?.message || 'Registration failed')
+      const errorMsg = err?.response?.data?.message || 'Registration failed'
+      const details = err?.response?.data?.details
+      if (details && Array.isArray(details)) {
+        const detailText = details.map(d => `${d.field}: ${d.message}`).join(', ')
+        setError(`${errorMsg} - ${detailText}`)
+      } else {
+        setError(errorMsg)
+      }
     }
     setSubmitting(false)
   }
@@ -34,20 +45,12 @@ export default function Register() {
         <h2 className="text-2xl font-bold mb-6">Create Account</h2>
         {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <Input 
-              label="First Name" 
-              required
-              value={form.firstName} 
-              onChange={(e) => setForm({ ...form, firstName: e.target.value })} 
-            />
-            <Input 
-              label="Last Name" 
-              required
-              value={form.lastName} 
-              onChange={(e) => setForm({ ...form, lastName: e.target.value })} 
-            />
-          </div>
+          <Input 
+            label="Full Name" 
+            required
+            value={form.name} 
+            onChange={(e) => setForm({ ...form, name: e.target.value })} 
+          />
           <Input 
             label="Email" 
             type="email"
@@ -63,26 +66,17 @@ export default function Register() {
             onChange={(e) => setForm({ ...form, password: e.target.value })} 
           />
           <Input 
-            label="Campus" 
-            value={form.campus} 
-            onChange={(e) => setForm({ ...form, campus: e.target.value })} 
+            label="Confirm Password" 
+            type="password" 
+            required
+            value={form.confirmPassword} 
+            onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} 
           />
           <Input 
             label="City" 
             value={form.city} 
             onChange={(e) => setForm({ ...form, city: e.target.value })} 
           />
-          <div>
-            <label className="text-sm block mb-1">Account Type</label>
-            <select 
-              value={form.role} 
-              onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="border border-slate-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="USER">User</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-          </div>
           <Button type="submit" disabled={submitting} className="w-full justify-center">
             {submitting ? 'Creating...' : 'Create Account'}
           </Button>
