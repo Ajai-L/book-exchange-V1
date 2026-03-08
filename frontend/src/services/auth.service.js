@@ -1,16 +1,14 @@
-import api from './api'
-
 export async function login(credentials) {
-  const res = await api.post('/auth/login', credentials)
-  return res.data
+  const payload = btoa(JSON.stringify({
+    sub: '1', role: 'USER', name: 'Leaf Light', firstName: 'Leaf', lastName: 'Light'
+  }));
+  return { token: `mockHeader.${payload}.mockSignature` };
 }
 
 export async function register(data) {
-  const res = await api.post('/auth/register', data)
-  return res.data
+  return login({});
 }
 
 export async function getMe() {
-  const res = await api.get('/auth/me')
-  return res.data
+  return { id: '1', role: 'USER', name: 'Leaf Light', firstName: 'Leaf', lastName: 'Light' };
 }

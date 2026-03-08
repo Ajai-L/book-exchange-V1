@@ -20,12 +20,9 @@ export default function MyBooks() {
     setLoading(true)
     setError(null)
     try {
-      const data = await fetch(`/api/users/${user.id}/books`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      }).then(r => r.json())
-      setBooks(Array.isArray(data) ? data : [])
+      const allBooks = await bookService.getBooks();
+      const myBooks = allBooks.filter(b => b.ownerId === user.id);
+      setBooks(myBooks);
     } catch (e) {
       console.error('Error fetching books:', e)
       setError('Failed to load books')

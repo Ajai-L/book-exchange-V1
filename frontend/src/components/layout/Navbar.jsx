@@ -21,8 +21,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Left Section */}
           <div className="flex items-center gap-8">
-            <Link to="/books" className="font-bold text-xl text-blue-600 hover:text-blue-700">
-              📚 OpenSelf
+            <Link to="/books" className="font-['F1_Regular',sans-serif] font-bold text-2xl text-blue-600 hover:text-blue-700">
+              OpenSelf
             </Link>
             <nav className="hidden md:flex items-center gap-6">
               <Link to="/books" className="text-sm text-slate-700 hover:text-blue-600 transition">
@@ -53,7 +53,7 @@ export default function Navbar() {
                 <Link to="/my-exchanges" className="hidden sm:inline text-sm text-slate-700 hover:text-blue-600 transition">
                   My Exchanges
                 </Link>
-                
+
                 {/* Profile Dropdown */}
                 <div className="relative">
                   <button
