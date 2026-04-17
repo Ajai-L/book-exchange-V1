@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
       const payload = decodeToken(t)
       if (payload) {
         const name = payload.firstName && payload.lastName ? `${payload.firstName} ${payload.lastName}` : payload.name || 'User'
-        setUser({ id: payload.sub, role: payload.role, name, firstName: payload.firstName, lastName: payload.lastName })
+        setUser({ id: payload.id, role: payload.role, name, firstName: payload.firstName, lastName: payload.lastName })
         setToken(t)
       }
     }
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('token', t)
     const payload = decodeToken(t)
     const name = payload.firstName && payload.lastName ? `${payload.firstName} ${payload.lastName}` : payload.name || 'User'
-    setUser({ id: payload.sub, role: payload.role, name, firstName: payload.firstName, lastName: payload.lastName })
+    setUser({ id: payload.id, role: payload.role, name, firstName: payload.firstName, lastName: payload.lastName })
     setToken(t)
     setLoading(false)
     return res
@@ -58,7 +58,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', res.token)
       const payload = decodeToken(res.token)
       const name = payload.firstName && payload.lastName ? `${payload.firstName} ${payload.lastName}` : payload.name || 'User'
-      setUser({ id: payload.sub, role: payload.role, name, firstName: payload.firstName, lastName: payload.lastName })
+      setUser({ id: payload.id, role: payload.role, name, firstName: payload.firstName, lastName: payload.lastName })
       setToken(res.token)
     }
     setLoading(false)

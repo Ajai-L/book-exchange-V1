@@ -1,48 +1,36 @@
-export let MOCK_EXCHANGES = [];
-let nextId = 1;
+import api from './api';
 
 export async function getExchanges(status = null) {
-  if (status) return MOCK_EXCHANGES.filter(e => e.status === status);
-  return [...MOCK_EXCHANGES];
+  // If status is needed, pass as query params (e.g. ?status=PENDING)
+  // Our backend returns all exchanges for the logged in user right now.
+  const { data } = await api.get('/exchanges');
+  if(status) {
+      return data.filter(e => e.status === status);
+  }
+  return data;
 }
 
 export async function getExchange(id) {
-  const e = MOCK_EXCHANGES.find(e => e.id === id);
+  // Can just do front-end filtering here, or add single fetch backend endpoint
+  const exchanges = await getExchanges();
+  const e = exchanges.find(ex => ex.id === parseInt(id));
   if (!e) throw new Error('Not found');
-  return { ...e };
-}
-
-export async function createExchange(data) {
-  const e = {
-    id: String(nextId++),
-    bookId: data.bookId,
-    notes: data.notes,
-    requesterId: '1',
-    requester: { firstName: 'Mock', lastName: 'User' },
-    status: 'PENDING',
-    createdAt: new Date().toISOString()
-  };
-  MOCK_EXCHANGES.push(e);
   return e;
 }
 
+export async function createExchange(exchangeData) {
+  const { data } = await api.post('/exchanges', exchangeData);
+  return data;
+}
+
 export async function updateExchange(id, status) {
-  const idx = MOCK_EXCHANGES.findIndex(e => e.id === id);
-  if (idx > -1) {
-    MOCK_EXCHANGES[idx] = { ...MOCK_EXCHANGES[idx], status };
-    return MOCK_EXCHANGES[idx];
-  }
-  throw new Error('Not found');
+  const { data } = await api.put(`/exchanges/${id}`, { status });
+  return data;
 }
 
 export async function deleteExchange(id) {
-  const idx = MOCK_EXCHANGES.findIndex(e => e.id === id);
-  if (idx > -1) {
-    const e = MOCK_EXCHANGES[idx];
-    MOCK_EXCHANGES.splice(idx, 1);
-    return e;
-  }
-  throw new Error('Not found');
+   // Our backend logic does not currently support deleting exchanges for bookkeeping purposes
+   throw new Error("Deleting history exchanges not allowed");
 }
 
 export function acceptExchange(id) { return updateExchange(id, 'ACCEPTED'); }

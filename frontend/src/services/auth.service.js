@@ -1,14 +1,16 @@
+import api from './api';
+
 export async function login(credentials) {
-  const payload = btoa(JSON.stringify({
-    sub: '1', role: 'USER', name: 'Leaf Light', firstName: 'Leaf', lastName: 'Light'
-  }));
-  return { token: `mockHeader.${payload}.mockSignature` };
+  const { data } = await api.post('/auth/login', credentials);
+  return data;
 }
 
-export async function register(data) {
-  return login({});
+export async function register(userData) {
+  const { data } = await api.post('/auth/register', userData);
+  return data;
 }
 
 export async function getMe() {
-  return { id: '1', role: 'USER', name: 'Leaf Light', firstName: 'Leaf', lastName: 'Light' };
+  const { data } = await api.get('/auth/me');
+  return data;
 }

@@ -24,7 +24,13 @@ export default function Register() {
     }
     setSubmitting(true)
     try {
-      await register(form)
+      const parts = form.name.split(' ');
+      const payload = {
+          ...form,
+          firstName: parts[0],
+          lastName: parts.slice(1).join(' ') || ''
+      };
+      await register(payload)
       navigate('/books')
     } catch (err) {
       const errorMsg = err?.response?.data?.message || 'Registration failed'
