@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getBooks } from '../../services/book.service'
+import { useAuth } from '../../context/AuthContext'
+import { getBooks, deleteBook } from '../../services/book.service'
 import BookCard from '../../components/books/BookCard'
 
 export default function BookList() {
@@ -8,6 +9,7 @@ export default function BookList() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [q, setQ] = useState('')
+  const { user } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -26,6 +28,16 @@ export default function BookList() {
       setBooks([])
     }
     setLoading(false)
+  }
+
+  async function handleDelete(bookId) {
+    try {
+      await deleteBook(bookId)
+      setBooks(books.filter(b => b.id !== bookId))
+      alert('Book deleted successfully')
+    } catch (err) {
+      alert('Failed to delete book: ' + (err.response?.data?.message || err.message))
+    }
   }
 
   return (
@@ -51,10 +63,16 @@ export default function BookList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {books.map(b => <BookCard key={b.id} book={b} />)}
+          {books.map(b => (
+            <BookCard 
+              key={b.id} 
+              book={b} 
+              isAdmin={user?.role === 'ADMIN'}
+              onDelete={user?.role === 'ADMIN' ? handleDelete : null}
+            />
+          ))}
         </div>
       )}
     </div>
   )
 }
-

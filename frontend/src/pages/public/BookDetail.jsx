@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { getBook } from '../../services/book.service'
 import { createExchange } from '../../services/exchange.service'
 import { useAuth } from '../../context/AuthContext'
 import Button from '../../components/common/Button'
+import BookImageGallery from '../../components/books/BookImageGallery'
+import BookImageUpload from '../../components/books/BookImageUpload'
 
 export default function BookDetail() {
   const { id } = useParams()
@@ -15,6 +17,7 @@ export default function BookDetail() {
   const [submitting, setSubmitting] = useState(false)
   const [exchangeModal, setExchangeModal] = useState(false)
   const [notes, setNotes] = useState('')
+  const [galleryKey, setGalleryKey] = useState(0)
 
   useEffect(() => {
     fetchBook()
@@ -71,18 +74,23 @@ export default function BookDetail() {
   return (
     <div className="max-w-5xl mx-auto p-4">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 flex flex-col sm:flex-row gap-6">
-          {book.coverImage ? (
-            <div className="w-full sm:w-1/3 flex-shrink-0">
-              <img src={book.coverImage} alt={book.title} className="w-full rounded-lg shadow-sm object-cover aspect-[2/3]" />
-            </div>
-          ) : (
-            <div className="w-full sm:w-1/3 flex-shrink-0 bg-slate-100 flex items-center justify-center rounded-lg aspect-[2/3] text-slate-400">
-              No Cover
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          {/* Image Gallery */}
+          <div className="bg-white rounded-lg shadow-sm p-4">
+            <BookImageGallery key={galleryKey} bookId={id} isOwner={isOwner} />
+          </div>
+
+          {/* Add Images Section (only for owner) */}
+          {isOwner && (
+            <div>
+              <BookImageUpload 
+                bookId={id} 
+                onImageAdded={() => setGalleryKey(k => k + 1)}
+              />
             </div>
           )}
           
-          <div className="flex-1">
+          <div>
             <h1 className="text-3xl font-bold text-slate-900">{book.title}</h1>
             <p className="text-lg text-slate-600 mt-2">by {book.author}</p>
             
@@ -121,19 +129,21 @@ export default function BookDetail() {
           <div className="p-5 bg-white border border-slate-200 rounded-xl shadow-sm sticky top-4">
             <h3 className="font-semibold text-lg text-slate-900 mb-4 border-b pb-2">Uploader Information</h3>
             
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-bold text-xl">
-                {book.owner?.firstName?.[0] || 'U'}
+            <Link to={`/profile/${book.ownerId}`}>
+              <div className="flex items-center gap-3 mb-4 hover:opacity-80 transition">
+                <div className="w-12 h-12 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-bold text-xl">
+                  {book.owner?.firstName?.[0] || 'U'}
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">
+                    {book.owner?.firstName} {book.owner?.lastName}
+                  </p>
+                  <p className="text-sm text-slate-500 text-xs mt-1">
+                    📍 {book.owner?.city || 'Unknown Location'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-slate-900">
-                  {book.owner?.firstName} {book.owner?.lastName}
-                </p>
-                <p className="text-sm text-slate-500 text-xs mt-1">
-                  📍 {book.owner?.city || 'Unknown Location'}
-                </p>
-              </div>
-            </div>
+            </Link>
 
             {!isOwner ? (
               <div className="mt-6">

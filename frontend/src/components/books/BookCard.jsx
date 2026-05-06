@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function BookCard({ book }) {
+export default function BookCard({ book, onDelete, isAdmin }) {
   return (
     <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
       <Link to={`/book/${book.id}`} className="block h-48 w-full bg-slate-100 relative overflow-hidden group">
@@ -42,6 +42,19 @@ export default function BookCard({ book }) {
             <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{book.description}</p>
             <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
           </div>
+        )}
+
+        {isAdmin && onDelete && (
+          <button
+            onClick={() => {
+              if (confirm('Delete this book?')) {
+                onDelete(book.id)
+              }
+            }}
+            className="mt-3 w-full px-3 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded text-xs font-medium transition-colors"
+          >
+            🗑️ Delete
+          </button>
         )}
       </div>
     </div>

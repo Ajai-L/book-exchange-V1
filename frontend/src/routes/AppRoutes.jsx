@@ -5,6 +5,7 @@ import Register from '../pages/auth/Register'
 import HowItWorks from '../pages/public/HowItWorks'
 import BookList from '../pages/public/BookList'
 import BookDetail from '../pages/public/BookDetail'
+import UserProfile from '../pages/public/UserProfile'
 import AddBook from '../pages/user/AddBook'
 import Profile from '../pages/user/Profile'
 import MyBooks from '../pages/user/MyBooks'
@@ -27,6 +28,7 @@ export default function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/books" element={<BookList />} />
         <Route path="/book/:id" element={<BookDetail />} />
+        <Route path="/profile/:userId" element={<UserProfile />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
 
         <Route element={<RequireAuth />}>

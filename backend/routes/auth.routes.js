@@ -37,7 +37,10 @@ router.post('/register', async (req, res) => {
       role: user.role,
       name: `${user.first_name} ${user.last_name}`,
       firstName: user.first_name,
-      lastName: user.last_name
+      lastName: user.last_name,
+      city: user.city,
+      campus: user.campus,
+      bio: user.bio
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -75,7 +78,10 @@ router.post('/login', async (req, res) => {
       role: user.role,
       name: `${user.first_name} ${user.last_name}`,
       firstName: user.first_name,
-      lastName: user.last_name
+      lastName: user.last_name,
+      city: user.city,
+      campus: user.campus,
+      bio: user.bio
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });

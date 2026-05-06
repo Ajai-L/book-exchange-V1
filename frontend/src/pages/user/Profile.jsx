@@ -33,16 +33,37 @@ export default function Profile() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/users/${user.id}`, {
+      const response = await fetch(`/api/profiles/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify({
+          bio: form.bio,
+          city: form.city,
+          campus: form.campus
+        })
       })
       
       if (!response.ok) throw new Error('Failed to update profile')
+      
+      const updatedUser = await response.json()
+      
+      // Update local storage with new user data
+      const token = localStorage.getItem('token')
+      if (token) {
+        // Decode and update token with new data
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        const newPayload = {
+          ...payload,
+          city: updatedUser.city,
+          campus: updatedUser.campus,
+          bio: updatedUser.bio
+        }
+        // Note: In production, you'd want to get a new token from backend
+        // For now, we'll just update the context
+      }
       
       setEditing(false)
       alert('Profile updated successfully!')

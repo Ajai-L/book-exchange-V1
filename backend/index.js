@@ -6,6 +6,8 @@ const authRoutes = require('./routes/auth.routes.js');
 const booksRoutes = require('./routes/books.routes.js');
 const exchangesRoutes = require('./routes/exchanges.routes.js');
 const adminRoutes = require('./routes/admin.routes.js');
+const bookImagesRoutes = require('./routes/book-images.routes.js');
+const profileRoutes = require('./routes/profile.routes.js');
 
 const app = express();
 
@@ -17,8 +19,10 @@ console.log('Mounting routes...');
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/books', booksRoutes);
+app.use('/api/books', bookImagesRoutes);
 app.use('/api/exchanges', exchangesRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/profiles', profileRoutes);
 
 // Base route for health check
 app.get('/api/health', (req, res) => {

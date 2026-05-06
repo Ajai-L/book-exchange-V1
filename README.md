@@ -93,10 +93,12 @@ Password: password123
 ### Administrator
 ```
 Email: admin@example.com
-Password: password123
+Password: admin123
 ```
 
-**Note:** You can also create new accounts via the Register page
+**⚠️ IMPORTANT:** Change the default admin password immediately after first login in production!
+
+For complete admin features and documentation, see [ADMIN_GUIDE.md](./ADMIN_GUIDE.md)
 
 ## 🔄 Multiple Accounts & Exchange System
 
