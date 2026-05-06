@@ -1,7 +1,16 @@
 import axios from 'axios'
 
+const getBaseURL = () => {
+  // In production, use the environment variable
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
+  }
+  // In development, use relative path (proxied by vite)
+  return '/api'
+}
+
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: getBaseURL()
 })
 
 api.interceptors.request.use((config) => {
